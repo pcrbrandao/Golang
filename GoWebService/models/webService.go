@@ -1,4 +1,4 @@
-package webservice
+package models
 
 import (
 	"github.com/codegangsta/martini"
