@@ -11,7 +11,7 @@ func main() {
 	db, err := mySQL.Db()
 
 	if err != nil {
-		fmt.Println("Não pude conectar ao banco...", err.Error())
+		fmt.Println(utils.ERROCONECTANDO.String(), err.Error())
 	}
 
 	defer db.Close()

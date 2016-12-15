@@ -54,11 +54,11 @@ func TestMySqlPass_User(t *testing.T) {
 	m := SharedMySqlPass()
 
 	if err := m.SetUser("do"); err != nil {
-		t.Logf("Algo errado... %s", err.Error())
+		t.Logf("%s %s", ERRO.String(), err.Error())
 		return
 	}
 
-	t.Errorf("tudo certo! usuário %q está ok...", m.User())
+	t.Errorf("%s usuário %q está ok...", TUDOCERTO.String(), m.User())
 }
 
 func TestMySqlPass_User2(t *testing.T) {
@@ -66,11 +66,11 @@ func TestMySqlPass_User2(t *testing.T) {
 	m := SharedMySqlPass()
 
 	if err := m.SetUser("user"); err != nil {
-		t.Errorf("Algo errado... %s", err.Error())
+		t.Errorf("%s %s", ERRO.String(), err.Error())
 		return
 	}
 
-	t.Logf("tudo certo! usuario %q está ok....", m.User())
+	t.Logf("%s usuario %q está ok....", TUDOCERTO.String(), m.User())
 }
 
 func TestMySqlPass_User3(t *testing.T) {
@@ -78,11 +78,11 @@ func TestMySqlPass_User3(t *testing.T) {
 	m := SharedMySqlPass()
 
 	if err := m.SetUser("root12"); err != nil {
-		t.Errorf("Algo errado... %s", err.Error())
+		t.Errorf("%s %s", ERRO.String(), err.Error())
 		return
 	}
 
-	t.Logf("tudo certo! usuario %q está ok....", m.User())
+	t.Logf("%s usuario %q está ok....", TUDOCERTO.String(), m.User())
 }
 
 func TestMySqlPass_Db(t *testing.T) {
@@ -92,11 +92,11 @@ func TestMySqlPass_Db(t *testing.T) {
 	m.SetUser("root")
 
 	if db, err := m.Db(); err == nil && db != nil {
-		t.Logf("tudo certo. O banco está online...")
+		t.Logf("%s %s", TUDOCERTO.String(), CONECTADO.String())
 
 		defer db.Close()
 		return
 	}
 
-	t.Errorf("Erro. O banco está offline...")
+	t.Errorf(ERROCONECTANDO.String())
 }

@@ -3,6 +3,8 @@ package model
 import  (
 	"github.com/jinzhu/gorm"
 
+	"fmt"
+	"Golang/ReceitasGo/mensagem"
 )
 
 type Alimento struct {
@@ -17,4 +19,6 @@ type Alimento struct {
 
 func SetDescricao(d string) error {
 	// hashedDescricao, err := bcrypt.
+
+	return fmt.Errorf(mensagem.EMDESENVOLVIMENTO.String())
 }

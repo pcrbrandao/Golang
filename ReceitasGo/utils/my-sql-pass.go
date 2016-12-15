@@ -8,6 +8,7 @@ import (
 	"sync"
 	"regexp"
 	"net"
+	"Golang/ReceitasGo/mensagem"
 )
 
 // Usado para validar strings
@@ -51,15 +52,16 @@ func (m *mySqlPass)User() string {
 // Valida a entrada de User
 func (m *mySqlPass)SetUser(u string) error {
 
-	const errorMens = "valor %q não é inválido"
+	const MENSERRO = fmt.Errorf("%s valor %q %s", mensagem.ERRO.String(), u, mensagem.NAOEVALIDO.String())
+
 	var alfanumerico = regexp.MustCompile(`[0-9A-Za-z]$`)
 
 	if eAlfanumerico := alfanumerico.MatchString(u); !eAlfanumerico {
-		return fmt.Errorf(errorMens, u)
+		return fmt.Errorf(MENSERRO)
 	}
 
 	if l := len(u); l == 0 || l < 3 || l > 40 {
-		return fmt.Errorf(errorMens, u)
+		return fmt.Errorf(MENSERRO)
 	}
 
 	m.user = u
@@ -121,10 +123,10 @@ func (m *mySqlPass) Db() (*gorm.DB, error) {
 	db, err := gorm.Open("mysql", m.String())
 
 	if err != nil {
-		fmt.Printf("Erro tentando conectar.....%s", err.Error())
+		fmt.Printf("%s %s", mensagem.ERROCONECTANDO.String(), err.Error())
 		return nil, err
 	}
 
-	println("conectado ao banco com sucesso...")
+	println(mensagem.CONECTADO.String())
 	return db, nil
 }
