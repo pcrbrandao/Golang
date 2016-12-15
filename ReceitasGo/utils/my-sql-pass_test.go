@@ -89,6 +89,8 @@ func TestMySqlPass_Db(t *testing.T) {
 
 	m := SharedMySqlPass()
 
+	m.SetUser("root")
+
 	if db, err := m.Db(); err == nil && db != nil {
 		t.Logf("tudo certo. O banco está online...")
 

@@ -1,9 +1,9 @@
 package controller
 
 import (
-	"model"
-	"utils"
 	"fmt"
+	"Golang/ReceitasGo/model"
+	"Golang/ReceitasGo/utils"
 )
 
 func Adiciona(alimento *model.Alimento) error {
