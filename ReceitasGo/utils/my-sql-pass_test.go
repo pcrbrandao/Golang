@@ -3,6 +3,7 @@ package utils
 import (
 	"fmt"
 	"testing"
+	"Golang/ReceitasGo/mensagem"
 )
 
 func ExampleMySqlPass_Param() {
@@ -49,40 +50,43 @@ func ExampleMySqlPass_String() {
 	// OutPut: root:root@tcp(127.0.0.1:8889)/receitas?charset=utf8&parseTime=True&loc=Local
 }
 
-func TestMySqlPass_User(t *testing.T) {
+func TestDoDeveSerInvalido(t *testing.T) {
 
 	m := SharedMySqlPass()
 
-	if err := m.SetUser("do"); err != nil {
-		t.Logf("%s %s", ERRO.String(), err.Error())
+	entrada := "do"
+
+	if err := m.SetUser(entrada); err != nil {
+		PassouEntradaInvalida(entrada, t)
 		return
 	}
-
-	t.Errorf("%s usuário %q está ok...", TUDOCERTO.String(), m.User())
+	FalhouEntradaValida(entrada, t)
 }
 
-func TestMySqlPass_User2(t *testing.T) {
+func TestUserDeveSerValido(t *testing.T) {
 
 	m := SharedMySqlPass()
+	entrada := "user"
 
-	if err := m.SetUser("user"); err != nil {
-		t.Errorf("%s %s", ERRO.String(), err.Error())
+	if err := m.SetUser(entrada); err != nil {
+		FalhouEntradaInvalida(entrada, t)
 		return
 	}
-
-	t.Logf("%s usuario %q está ok....", TUDOCERTO.String(), m.User())
+	PassouEntradaValida(entrada, t)
 }
 
-func TestMySqlPass_User3(t *testing.T) {
+func TestRoot12DeveSerValido(t *testing.T) {
 
 	m := SharedMySqlPass()
 
-	if err := m.SetUser("root12"); err != nil {
-		t.Errorf("%s %s", ERRO.String(), err.Error())
+	entrada := "root12"
+
+	if err := m.SetUser(entrada); err != nil {
+		FalhouEntradaInvalida(entrada, t)
 		return
 	}
 
-	t.Logf("%s usuario %q está ok....", TUDOCERTO.String(), m.User())
+	PassouEntradaValida(entrada, t)
 }
 
 func TestMySqlPass_Db(t *testing.T) {
@@ -91,12 +95,13 @@ func TestMySqlPass_Db(t *testing.T) {
 
 	m.SetUser("root")
 
-	if db, err := m.Db(); err == nil && db != nil {
-		t.Logf("%s %s", TUDOCERTO.String(), CONECTADO.String())
+	db, err := m.Db()
+	defer db.Close()
 
-		defer db.Close()
+	if err == nil && db != nil {
+		t.Logf("%s %s", mensagem.TUDOCERTO, mensagem.CONECTADO)
 		return
 	}
 
-	t.Errorf(ERROCONECTANDO.String())
+	t.Errorf(mensagem.ERROCONECTANDO)
 }

@@ -52,7 +52,7 @@ func (m *mySqlPass)User() string {
 // Valida a entrada de User
 func (m *mySqlPass)SetUser(u string) error {
 
-	const MENSERRO = fmt.Errorf("%s valor %q %s", mensagem.ERRO.String(), u, mensagem.NAOEVALIDO.String())
+	var MENSERRO = fmt.Sprintf("%s valor %q %s", mensagem.ERRO, u, mensagem.NAOEVALIDO)
 
 	var alfanumerico = regexp.MustCompile(`[0-9A-Za-z]$`)
 
@@ -123,10 +123,10 @@ func (m *mySqlPass) Db() (*gorm.DB, error) {
 	db, err := gorm.Open("mysql", m.String())
 
 	if err != nil {
-		fmt.Printf("%s %s", mensagem.ERROCONECTANDO.String(), err.Error())
+		fmt.Printf("%s %s", mensagem.ERROCONECTANDO, err.Error())
 		return nil, err
 	}
 
-	println(mensagem.CONECTADO.String())
+	println(mensagem.CONECTADO)
 	return db, nil
 }

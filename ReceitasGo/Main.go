@@ -1,8 +1,9 @@
-package main
+package ReceitasGo
 
 import (
 	"Golang/ReceitasGo/utils"
 	"fmt"
+	"Golang/ReceitasGo/mensagem"
 )
 
 func main() {
@@ -11,7 +12,7 @@ func main() {
 	db, err := mySQL.Db()
 
 	if err != nil {
-		fmt.Println(utils.ERROCONECTANDO.String(), err.Error())
+		fmt.Println(mensagem.ERROCONECTANDO, err.Error())
 	}
 
 	defer db.Close()
