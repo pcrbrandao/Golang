@@ -1,4 +1,4 @@
-package utils
+package lib
 
 func StringSliceIsEqual(a []string, b []string) bool {
 
@@ -46,12 +46,3 @@ func CharSliceRemoveFrom(slice []Char, val Char) []Char {
 	}
 	return novaSlice
 }
-
-type Char string
-
-const (
-	NUMERO Char = "número"
-	MAIUSCULA = "maiúscula"
-	ESPECIAL = "especial"
-	MENORQUESETE = "menor que 7"
-)

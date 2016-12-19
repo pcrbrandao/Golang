@@ -2,8 +2,8 @@ package model
 
 import (
 	"testing"
-	"Golang/ReceitasGo/utils"
 	"fmt"
+	"Golang/ReceitasGo/tester"
 )
 
 func TestSenhaSemMaiusculaDeveSerInvalida(t *testing.T) {
@@ -13,11 +13,11 @@ func TestSenhaSemMaiusculaDeveSerInvalida(t *testing.T) {
 
 	if err := usuario.SetSenha(entrada); err != nil {
 
-		utils.PassouEntradaInvalida(entrada, t)
+		tester.PassouEntradaInvalida(entrada, t)
 		return
 	}
 
-	utils.FalhouEntradaValida(entrada, t)
+	tester.FalhouEntradaValida(entrada, t)
 }
 
 func TestSenhaDeveSerValida(t *testing.T) {
@@ -28,11 +28,11 @@ func TestSenhaDeveSerValida(t *testing.T) {
 
 	if len(cond) > 0 {
 		fmt.Printf("condicoes.... %s\n", cond)
-		utils.FalhouEntradaInvalida(entrada, t)
+		tester.FalhouEntradaInvalida(entrada, t)
 		return
 	}
 	fmt.Printf("comprimento de cond... %v\n", len(cond))
-	utils.PassouEntradaValida(entrada, t)
+	tester.PassouEntradaValida(entrada, t)
 }
 
 func TestSenhaMenorQueSeteDeveSerInvalida(t *testing.T) {
@@ -41,11 +41,11 @@ func TestSenhaMenorQueSeteDeveSerInvalida(t *testing.T) {
 	entrada := "Ped@14"
 
 	if cond := u.verificaSenha(entrada); len(cond) > 0 {
-		utils.PassouEntradaInvalida(entrada, t)
+		tester.PassouEntradaInvalida(entrada, t)
 		return
 	}
 
-	utils.FalhouEntradaValida(entrada, t)
+	tester.FalhouEntradaValida(entrada, t)
 }
 
 func TestSenhaEmBrancoDeveSerInvalida(t *testing.T) {
@@ -53,10 +53,10 @@ func TestSenhaEmBrancoDeveSerInvalida(t *testing.T) {
 	entrada := ""
 
 	if cond := u.verificaSenha(entrada); len(cond) > 0 {
-		utils.PassouEntradaInvalida(entrada, t)
+		tester.PassouEntradaInvalida(entrada, t)
 		return
 	}
-	utils.FalhouEntradaInvalida(entrada, t)
+	tester.FalhouEntradaInvalida(entrada, t)
 }
 
 func TestSenhaNumericaDeveSerInvalida(t *testing.T) {
@@ -64,10 +64,10 @@ func TestSenhaNumericaDeveSerInvalida(t *testing.T) {
 	entrada := "1234567"
 
 	if cond := u.verificaSenha(entrada); len(cond) > 0 {
-		utils.PassouEntradaInvalida(entrada, t)
+		tester.PassouEntradaInvalida(entrada, t)
 		return
 	}
-	utils.FalhouEntradaInvalida(entrada, t)
+	tester.FalhouEntradaInvalida(entrada, t)
 }
 
 func TestSenhaTodasMinusculasDeveSerInvalida(t *testing.T) {
@@ -75,8 +75,8 @@ func TestSenhaTodasMinusculasDeveSerInvalida(t *testing.T) {
 	entrada := "pedrocr"
 
 	if cond := u.verificaSenha(entrada); len(cond) > 0 {
-		utils.PassouEntradaInvalida(entrada, t)
+		tester.PassouEntradaInvalida(entrada, t)
 		return
 	}
-	utils.FalhouEntradaInvalida(entrada, t)
+	tester.FalhouEntradaInvalida(entrada, t)
 }

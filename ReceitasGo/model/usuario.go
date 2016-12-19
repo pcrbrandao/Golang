@@ -6,12 +6,11 @@ import (
 	"fmt"
 	"Golang/ReceitasGo/mensagem"
 	"unicode"
-	"Golang/ReceitasGo/utils"
+	"Golang/ReceitasGo/lib"
 )
 
 type Usuario struct {
 
-	Modelo
 	// Contém ID, CreatedAt, UpdatedAt, DeletedAt
 	gorm.Model
 
@@ -47,23 +46,23 @@ func (u *Usuario)SetSenha(senha string) error {
 // o tipo correspondente, caso haja.
 // Se condicoes retornar vazio, é porque todas as condicoes foram cumpridas
 // As condicoes que retornaram são as que não foram satisfeitas.
-func (u *Usuario) verificaSenha(s string) (condicoes []utils.Char) {
+func (u *Usuario) verificaSenha(s string) (condicoes []lib.Char) {
 
-	condicoes = []utils.Char{
-		utils.NUMERO, utils.MAIUSCULA,
-		utils.ESPECIAL, utils.MENORQUESETE}
+	condicoes = []lib.Char{
+		lib.NUMERO, lib.MAIUSCULA,
+		lib.ESPECIAL, lib.MENORQUESETE}
 
 	for _, s := range s {
 		switch {
 		case unicode.IsNumber(s):
 			fmt.Printf("remove número...%q\n", s)
-			condicoes = utils.CharSliceRemoveFrom(condicoes, utils.NUMERO)
+			condicoes = lib.CharSliceRemoveFrom(condicoes, lib.NUMERO)
 		case unicode.IsUpper(s):
 			fmt.Printf("remove maiúscula... %q\n", s)
-			condicoes = utils.CharSliceRemoveFrom(condicoes, utils.MAIUSCULA)
+			condicoes = lib.CharSliceRemoveFrom(condicoes, lib.MAIUSCULA)
 		case unicode.IsPunct(s) || unicode.IsSymbol(s):
 			fmt.Printf("remove especial... %q\n", s)
-			condicoes = utils.CharSliceRemoveFrom(condicoes, utils.ESPECIAL)
+			condicoes = lib.CharSliceRemoveFrom(condicoes, lib.ESPECIAL)
 		case unicode.IsLetter(s) || s == ' ':
 			fmt.Printf("letras minúscula... %q\n", s)
 		default:
@@ -73,7 +72,11 @@ func (u *Usuario) verificaSenha(s string) (condicoes []utils.Char) {
 	}
 	if l := len(s); l == 7 {
 		fmt.Printf("comprimento correto... %d\n", len(s))
-		condicoes = utils.CharSliceRemoveFrom(condicoes, utils.MENORQUESETE)
+		condicoes = lib.CharSliceRemoveFrom(condicoes, lib.MENORQUESETE)
 	}
 	return condicoes
+}
+
+func (a *Usuario)GetID() uint {
+	return a.ID
 }

@@ -7,11 +7,11 @@ import (
 	"Golang/ReceitasGo/mensagem"
 )
 
-type AlimentoControl Controller
+type AlimentoControl struct { }
 
-func (ac *AlimentoControl)Adiciona(al *model.Alimento) error {
+func (ac AlimentoControl)Adiciona(al *model.Alimento) error {
 
-	db, err := utils.SharedMySqlPass().Db()
+	db, err := utils.SharedControl().Db()
 
 	if err != nil {
 		return err

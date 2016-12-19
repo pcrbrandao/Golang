@@ -4,10 +4,13 @@ import (
 	"regexp"
 	"fmt"
 	"Golang/ReceitasGo/mensagem"
+	"github.com/jinzhu/gorm"
 )
 
 type Email struct {
-	ID int
+
+	gorm.Model
+
 	UsuarioID int `gorm:"index"` // Foreign key
 	Address string `gorm:"type:varchar(100);unique_index"`
 	Inscrito bool
@@ -23,4 +26,8 @@ func (e *Email) SetAddress(address string) error {
 	}
 
 	return fmt.Errorf("%q %s", address, mensagem.NAOEVALIDO)
+}
+
+func (a *Email)GetID() uint {
+	return a.ID
 }

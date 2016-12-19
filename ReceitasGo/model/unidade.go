@@ -9,3 +9,7 @@ type Unidade struct {
 	Descricao string
 	simbolo string
 }
+
+func (a *Unidade)GetID() uint {
+	return a.ID
+}

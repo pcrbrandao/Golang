@@ -1,8 +1,9 @@
-package utils
+package lib
 
 import (
 	"testing"
 	"fmt"
+	"Golang/ReceitasGo/tester"
 )
 
 func TestRemoveDaSlice(t *testing.T) {
@@ -24,7 +25,7 @@ func TestRemoveDaSlice(t *testing.T) {
 		}
 	}
 
-	PassouEntradaValida("entrada", t)
+	tester.PassouEntradaValida("entrada", t)
 }
 
 func TestSlicesDevemSerIguais(t *testing.T) {

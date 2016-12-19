@@ -9,11 +9,22 @@ import (
 	"regexp"
 	"net"
 	"Golang/ReceitasGo/mensagem"
+	"Golang/ReceitasGo/model"
 )
 
 // Usado para validar strings
 // alfanumerico.MatchString() bool faz a análise
 var alfanumerico = regexp.MustCompile(`[0-9A-Za-z]$`)
+
+var TABLES = []model.Ider{
+	&model.Alimento{},
+	&model.Email{},
+	&model.Ingrediente{},
+	&model.IngredienteNaReceita{},
+	&model.Ocasiao{},
+	&model.Receita{},
+	&model.Unidade{},
+	&model.Usuario{} }
 
 // Contém os parâmetros para conexao ao db
 // os campos são auto-explicativos
@@ -34,7 +45,8 @@ var sharedInstance *mySqlPass
 var once sync.Once
 
 // O construtor singleton
-func SharedMySqlPass() *mySqlPass {
+func (m *mySqlPass)SharedControl() *mySqlPass {
+
 	once.Do(func() {
 		sharedInstance = &mySqlPass{}
 	})
@@ -113,7 +125,7 @@ func (m *mySqlPass) String() string {
 	return strings.Join(fields, "")
 }
 
-//
+// retorna um db válido
 func (m *mySqlPass) Db() (*gorm.DB, error) {
 
 	if m.db != nil {
@@ -127,6 +139,22 @@ func (m *mySqlPass) Db() (*gorm.DB, error) {
 		return nil, err
 	}
 
+	if err := createTablesOnDb(db); err != nil {
+		return nil, err
+	}
+
 	println(mensagem.CONECTADO)
 	return db, nil
+}
+
+// cria tabelas no db
+func createTablesOnDb(db *gorm.DB) error {
+
+	for _,model := range TABLES {
+		if err := db.AutoMigrate(model).Error; err != nil {
+			return fmt.Errorf("%s %s", mensagem.NAOPUDECRIAR, err.Error())
+		}
+	}
+
+	return nil
 }

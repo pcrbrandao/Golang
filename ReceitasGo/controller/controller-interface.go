@@ -4,8 +4,8 @@ import "Golang/ReceitasGo/model"
 
 type Controller interface {
 
-	Adiciona(m *model.Modelo) error
-	Edita(m *model.Modelo) error
-	Exclui(m *model.Modelo) error
-	Lista(m *model.Modelo) error
+	Adiciona(m *model.Ider) error
+	Edita(m *model.Ider) error
+	Exclui(m *model.Ider) error
+	Lista(m *model.Ider) error
 }

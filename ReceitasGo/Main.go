@@ -8,7 +8,7 @@ import (
 
 func main() {
 
-	mySQL := utils.SharedMySqlPass()
+	mySQL := utils.SharedControl()
 	db, err := mySQL.Db()
 
 	if err != nil {

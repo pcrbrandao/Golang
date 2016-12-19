@@ -16,4 +16,5 @@ const (
 	INVALIDO = "inválido"
 	JAEXISTE = "já existe"
 	ESTAOK = "está ok"
+	NAOPUDECRIAR = "não pude criar"
 )

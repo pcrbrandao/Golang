@@ -12,3 +12,7 @@ type IngredienteNaReceita struct {
 
 	Quantidade int
 }
+
+func (a *IngredienteNaReceita)GetID() uint {
+	return a.ID
+}

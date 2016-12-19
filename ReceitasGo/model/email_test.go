@@ -3,7 +3,7 @@ package model
 import (
 	"testing"
 	"Golang/ReceitasGo/mensagem"
-	"Golang/ReceitasGo/utils"
+	"Golang/ReceitasGo/tester"
 )
 
 func TestEmailDeveSerValido(t *testing.T) {
@@ -17,7 +17,7 @@ func TestEmailDeveSerValido(t *testing.T) {
 		return
 	}
 
-	utils.PassouEntradaValida(entrada, t)
+	tester.PassouEntradaValida(entrada, t)
 }
 
 func TestEmailDeveSerInvalido(t *testing.T) {
@@ -41,9 +41,9 @@ func TestEmailComAcentoDeveSerInvalido(t *testing.T) {
 	entrada := "Brandão"
 
 	if err := mail.SetAddress(entrada); err != nil {
-		utils.PassouEntradaInvalida(entrada, t)
+		tester.PassouEntradaInvalida(entrada, t)
 		return
 	}
 
-	utils.FalhouEntradaValida(entrada, t)
+	tester.FalhouEntradaValida(entrada, t)
 }

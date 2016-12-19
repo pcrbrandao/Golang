@@ -13,3 +13,7 @@ type Alimento struct {
 
 	Ingrediente []Ingrediente
 }
+
+func (a *Alimento)GetID() uint {
+	return a.ID
+}

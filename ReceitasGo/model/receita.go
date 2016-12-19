@@ -13,3 +13,7 @@ type Receita struct {
 	Ocasiao Ocasiao
 	IngredienteNaReceita []IngredienteNaReceita
 }
+
+func (a *Receita)GetID() uint {
+	return a.ID
+}
