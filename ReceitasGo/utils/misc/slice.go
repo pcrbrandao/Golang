@@ -1,4 +1,4 @@
-package lib
+package misc
 
 func StringSliceIsEqual(a []string, b []string) bool {
 

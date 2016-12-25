@@ -1,14 +1,15 @@
-package model
+package tests
 
 import (
 	"testing"
-	"Golang/ReceitasGo/mensagem"
-	"Golang/ReceitasGo/tester"
+	"Golang/ReceitasGo/domain"
+	"Golang/ReceitasGo/tests/utils"
+	"Golang/ReceitasGo/utils/misc"
 )
 
 func TestEmailDeveSerValido(t *testing.T) {
 
-	email := Email{}
+	email := domain.Email{}
 
 	entrada := "pcrbrandao@gmail.com"
 
@@ -17,33 +18,33 @@ func TestEmailDeveSerValido(t *testing.T) {
 		return
 	}
 
-	tester.PassouEntradaValida(entrada, t)
+	tests.PassouEntradaValida(entrada, t)
 }
 
 func TestEmailDeveSerInvalido(t *testing.T) {
 
-	email := Email{}
+	email := domain.Email{}
 
 	entrada := "pedro"
 
 	if err := email.SetAddress(entrada); err != nil {
-		t.Logf("%s %q %s", mensagem.TUDOCERTO, entrada, mensagem.NAOEVALIDO)
+		t.Logf("%s %q %s", misc.TUDOCERTO, entrada, misc.NAOEVALIDO)
 		return
 	}
 
-	t.Errorf("%q %s %s :(", entrada, mensagem.DEVERIASER, mensagem.INVALIDO)
+	t.Errorf("%q %s %s :(", entrada, misc.DEVERIASER, misc.INVALIDO)
 }
 
 func TestEmailComAcentoDeveSerInvalido(t *testing.T) {
 
-	mail := Email{}
+	mail := domain.Email{}
 
 	entrada := "Brandão"
 
 	if err := mail.SetAddress(entrada); err != nil {
-		tester.PassouEntradaInvalida(entrada, t)
+		tests.PassouEntradaInvalida(entrada, t)
 		return
 	}
 
-	tester.FalhouEntradaValida(entrada, t)
+	tests.FalhouEntradaValida(entrada, t)
 }

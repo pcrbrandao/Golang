@@ -1,4 +1,4 @@
-package lib
+package misc
 
 type Char string
 

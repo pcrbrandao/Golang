@@ -1,4 +1,4 @@
-package utils
+package dao
 
 import (
 	"strings"
@@ -6,30 +6,26 @@ import (
 	"fmt"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"sync"
-	"regexp"
 	"net"
-	"Golang/ReceitasGo/mensagem"
-	"Golang/ReceitasGo/model"
+	"Golang/ReceitasGo/domain"
+	"Golang/ReceitasGo/utils/interfaces"
+	"Golang/ReceitasGo/utils/misc"
 )
 
-// Usado para validar strings
-// alfanumerico.MatchString() bool faz a análise
-var alfanumerico = regexp.MustCompile(`[0-9A-Za-z]$`)
-
-var TABLES = []model.Ider{
-	&model.Alimento{},
-	&model.Email{},
-	&model.Ingrediente{},
-	&model.IngredienteNaReceita{},
-	&model.Ocasiao{},
-	&model.Receita{},
-	&model.Unidade{},
-	&model.Usuario{} }
+var TABLES = []interfaces.Ider{
+	&domain.Alimento{},
+	&domain.Email{},
+	&domain.Ingrediente{},
+	&domain.IngredienteNaReceita{},
+	&domain.Ocasiao{},
+	&domain.Receita{},
+	&domain.Unidade{},
+	&domain.Usuario{} }
 
 // Contém os parâmetros para conexao ao db
 // os campos são auto-explicativos
 // estão privados pois serão validados por sets e gets
-type mySqlPass struct {
+type dbSession struct {
 
 	user string
 	pass string
@@ -41,20 +37,20 @@ type mySqlPass struct {
 }
 
 // O singleton para a struct
-var sharedInstance *mySqlPass
-var once sync.Once
+var sharedDbSession *dbSession
+var onceDbSession sync.Once
 
 // O construtor singleton
-func (m *mySqlPass)SharedControl() *mySqlPass {
+func SharedDbSession() *dbSession {
 
-	once.Do(func() {
-		sharedInstance = &mySqlPass{}
+	onceDbSession.Do(func() {
+		sharedDbSession = &dbSession{}
 	})
-	return sharedInstance
+	return sharedDbSession
 }
 
 // inicializa User se for nulo
-func (m *mySqlPass)User() string {
+func (m *dbSession)User() string {
 	if m.user == "" {
 		return "root"
 	}
@@ -62,13 +58,11 @@ func (m *mySqlPass)User() string {
 }
 
 // Valida a entrada de User
-func (m *mySqlPass)SetUser(u string) error {
+func (m *dbSession)SetUser(u string) error {
 
-	var MENSERRO = fmt.Sprintf("%s valor %q %s", mensagem.ERRO, u, mensagem.NAOEVALIDO)
+	var MENSERRO = fmt.Sprintf("%s valor %q %s", misc.ERRO, u, misc.NAOEVALIDO)
 
-	var alfanumerico = regexp.MustCompile(`[0-9A-Za-z]$`)
-
-	if eAlfanumerico := alfanumerico.MatchString(u); !eAlfanumerico {
+	if eAlfanumerico := misc.ALFANUMERICO.MatchString(u); !eAlfanumerico {
 		return fmt.Errorf(MENSERRO)
 	}
 
@@ -81,7 +75,7 @@ func (m *mySqlPass)SetUser(u string) error {
 }
 
 // inicializa Pass se for nulo
-func (m *mySqlPass)Pass() string {
+func (m *dbSession)Pass() string {
 	if m.pass == "" {
 		return "root"
 	}
@@ -89,7 +83,7 @@ func (m *mySqlPass)Pass() string {
 }
 
 // o banco de dados padrão é o receitas
-func (m *mySqlPass)Dbname() string {
+func (m *dbSession)Dbname() string {
 	if m.dbName == "" {
 		return "receitas"
 	}
@@ -97,15 +91,19 @@ func (m *mySqlPass)Dbname() string {
 }
 
 // parâmetros default do GORM
-func (m *mySqlPass)Param() string {
+func (m *dbSession)Param() string {
 	if m.param == "" {
 		return "charset=utf8&parseTime=True&loc=Local"
 	}
 	return m.param
 }
 
+func (m *dbSession)SetParam(param string) {
+	m.param = param
+}
+
 // o endereço do servidor. Será a máquina local por padrão. Não aceitou localhost.
-func (m *mySqlPass)Address() string {
+func (m *dbSession)Address() string {
 	if m.address == nil {
 		return "127.0.0.1:8889"
 	}
@@ -113,12 +111,12 @@ func (m *mySqlPass)Address() string {
 }
 
 // O Address é do tipo net.IP, por isso ele não precisa ser validado aqui.
-func (m *mySqlPass)SetAddress(ip net.IP) {
+func (m *dbSession)SetAddress(ip net.IP) {
 	m.address = ip
 }
 
 // Obtém a string no formato que o gorm.Open aceita.
-func (m *mySqlPass) String() string {
+func (m *dbSession) String() string {
 
 	fields := []string{m.User(), ":", m.Pass(), "@tcp(", m.Address(), ")/", m.Dbname(), "?", m.Param()}
 
@@ -126,7 +124,7 @@ func (m *mySqlPass) String() string {
 }
 
 // retorna um db válido
-func (m *mySqlPass) Db() (*gorm.DB, error) {
+func (m *dbSession) Db() (*gorm.DB, error) {
 
 	if m.db != nil {
 		return m.db, nil
@@ -135,24 +133,24 @@ func (m *mySqlPass) Db() (*gorm.DB, error) {
 	db, err := gorm.Open("mysql", m.String())
 
 	if err != nil {
-		fmt.Printf("%s %s", mensagem.ERROCONECTANDO, err.Error())
+		fmt.Printf("%s %s", misc.ERROCONECTANDO, err.Error())
 		return nil, err
 	}
 
-	if err := createTablesOnDb(db); err != nil {
+	if err := CreateTablesOnDb(db); err != nil {
 		return nil, err
 	}
 
-	println(mensagem.CONECTADO)
+	println(misc.CONECTADO)
 	return db, nil
 }
 
 // cria tabelas no db
-func createTablesOnDb(db *gorm.DB) error {
+func CreateTablesOnDb(db *gorm.DB) error {
 
 	for _,model := range TABLES {
 		if err := db.AutoMigrate(model).Error; err != nil {
-			return fmt.Errorf("%s %s", mensagem.NAOPUDECRIAR, err.Error())
+			return fmt.Errorf("%s %s", misc.NAOPUDECRIAR, err.Error())
 		}
 	}
 

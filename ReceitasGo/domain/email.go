@@ -1,10 +1,10 @@
-package model
+package domain
 
 import (
 	"regexp"
 	"fmt"
-	"Golang/ReceitasGo/mensagem"
 	"github.com/jinzhu/gorm"
+	"Golang/ReceitasGo/utils/misc"
 )
 
 type Email struct {
@@ -25,7 +25,7 @@ func (e *Email) SetAddress(address string) error {
 		return nil
 	}
 
-	return fmt.Errorf("%q %s", address, mensagem.NAOEVALIDO)
+	return fmt.Errorf("%q %s", address, misc.NAOEVALIDO)
 }
 
 func (a *Email)GetID() uint {

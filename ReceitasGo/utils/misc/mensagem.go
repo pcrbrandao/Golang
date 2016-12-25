@@ -1,4 +1,4 @@
-package mensagem
+package misc
 
 // Esse é o tipo
 type Mensagem string
