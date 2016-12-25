@@ -4,34 +4,40 @@ import (
 	"fmt"
 	"Golang/ReceitasGo/domain"
 	"Golang/ReceitasGo/utils/misc"
-	"sync"
+	"github.com/jinzhu/gorm"
+	"log"
 )
 
 type alimentoDAO struct {
+	db *gorm.DB
 }
 
 // O singleton para a struct
 var sharedAlimentoDAO *alimentoDAO
-var onceAlimentoDAO sync.Once
 
 // O construtor singleton
 func SharedAlimentoDAO() *alimentoDAO {
 
-	onceAlimentoDAO.Do(func() {
-		sharedAlimentoDAO = &alimentoDAO{}
+	once.Do(func() {
+		sharedAlimentoDAO = newAlimentoDAO()
 	})
 	return sharedAlimentoDAO
 }
 
-func (ac alimentoDAO)Add(al *domain.Alimento) error {
-
+func newAlimentoDAO() *alimentoDAO {
 	db, err := SharedDbSession().Db()
 
 	if err != nil {
-		return err
+		log.Fatalf("Não pude iniciar o db: %s", err)
+		return nil
 	}
+	a := alimentoDAO{db: db}
+	return &a
+}
 
-	tx := db.Begin()
+func (ac *alimentoDAO)Add(al *domain.Alimento) error {
+
+	tx := ac.db.Begin()
 
 	if !tx.NewRecord(al) {
 		return fmt.Errorf("%s", misc.JAEXISTE)

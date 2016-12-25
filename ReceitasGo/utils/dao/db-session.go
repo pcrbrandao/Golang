@@ -38,12 +38,12 @@ type dbSession struct {
 
 // O singleton para a struct
 var sharedDbSession *dbSession
-var onceDbSession sync.Once
+var once sync.Once
 
 // O construtor singleton
 func SharedDbSession() *dbSession {
 
-	onceDbSession.Do(func() {
+	once.Do(func() {
 		sharedDbSession = &dbSession{}
 	})
 	return sharedDbSession
