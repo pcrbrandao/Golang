@@ -129,7 +129,7 @@ func TestCreateTablesOnDb(t *testing.T) {
 	// criadas com sucesso. Agora apaga!
 	// for _,model := range dao.TABLES {
 	//	db.DropTableIfExists(model)
-	// }
+	//}
 
 	t.Logf("tabelas criadas com sucesso!")
 }

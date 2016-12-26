@@ -11,9 +11,9 @@ func TestAlimentoDAO_Adiciona(t *testing.T) {
 
 	alimento := domain.Alimento{Descricao: "Alimento 1", GrupoAlimentar:0}
 
-	control := dao.SharedAlimentoDAO()
+	dao := dao.SharedAlimentoDAO()
 
-	if err := control.Add(&alimento); err != nil {
+	if err := dao.Add(&alimento); err != nil {
 		t.Errorf("%s %s", misc.ERRO, err.Error())
 		return
 	}

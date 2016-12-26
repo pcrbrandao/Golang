@@ -2,10 +2,11 @@ package dao
 
 import (
 	"fmt"
-	"Golang/ReceitasGo/domain"
+	d "Golang/ReceitasGo/domain"
 	"Golang/ReceitasGo/utils/misc"
 	"github.com/jinzhu/gorm"
 	"log"
+	"sync"
 )
 
 type alimentoDAO struct {
@@ -13,12 +14,15 @@ type alimentoDAO struct {
 }
 
 // O singleton para a struct
+// As variáveis ficam disponíveis para o package dao
+// e devem ser únicas para cada singleton
 var sharedAlimentoDAO *alimentoDAO
+var onceAlimentoDAO sync.Once
 
 // O construtor singleton
 func SharedAlimentoDAO() *alimentoDAO {
 
-	once.Do(func() {
+	onceAlimentoDAO.Do(func() {
 		sharedAlimentoDAO = newAlimentoDAO()
 	})
 	return sharedAlimentoDAO
@@ -35,7 +39,7 @@ func newAlimentoDAO() *alimentoDAO {
 	return &a
 }
 
-func (ac *alimentoDAO)Add(al *domain.Alimento) error {
+func (ac *alimentoDAO)Add(al *d.Alimento) error {
 
 	tx := ac.db.Begin()
 
@@ -52,22 +56,25 @@ func (ac *alimentoDAO)Add(al *domain.Alimento) error {
 	return nil
 }
 
-func (ac alimentoDAO)Find(al *domain.Alimento) error {
+func (ac *alimentoDAO)Find(descricao string) d.Alimento {
+
+	var alimento d.Alimento
+	ac.db.Where(&d.Alimento{Descricao:descricao}).First(&alimento)
+
+	return alimento
+}
+
+func (ac *alimentoDAO)List(al *d.Alimento) error {
 
 	return fmt.Errorf("%s", misc.EMDESENVOLVIMENTO)
 }
 
-func (ac alimentoDAO)List(al *domain.Alimento) error {
+func (ac *alimentoDAO)Edit(al *d.Alimento) error {
 
 	return fmt.Errorf("%s", misc.EMDESENVOLVIMENTO)
 }
 
-func (ac alimentoDAO)Edit(al *domain.Alimento) error {
-
-	return fmt.Errorf("%s", misc.EMDESENVOLVIMENTO)
-}
-
-func (ac alimentoDAO)Delete(al *domain.Alimento) error {
+func (ac *alimentoDAO)Delete(al *d.Alimento) error {
 
 	return fmt.Errorf("%s", misc.EMDESENVOLVIMENTO)
 }

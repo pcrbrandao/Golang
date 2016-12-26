@@ -38,12 +38,12 @@ type dbSession struct {
 
 // O singleton para a struct
 var sharedDbSession *dbSession
-var once sync.Once
+var onceDbSession sync.Once
 
 // O construtor singleton
 func SharedDbSession() *dbSession {
 
-	once.Do(func() {
+	onceDbSession.Do(func() {
 		sharedDbSession = &dbSession{}
 	})
 	return sharedDbSession
@@ -147,6 +147,7 @@ func (m *dbSession) Db() (*gorm.DB, error) {
 
 // cria tabelas no db
 func CreateTablesOnDb(db *gorm.DB) error {
+	db.SingularTable(true)
 
 	for _,model := range TABLES {
 		if err := db.AutoMigrate(model).Error; err != nil {
