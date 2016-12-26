@@ -14,7 +14,7 @@ func TestAlimentoDAO_Adiciona(t *testing.T) {
 	dao := dao.SharedAlimentoDAO()
 
 	if err := dao.Add(&alimento); err != nil {
-		t.Errorf("%s %s", misc.ERRO, err.Error())
+		t.Errorf("Erro tentando adicionar: %s %s", misc.ERRO, err.Error())
 		return
 	}
 

@@ -8,42 +8,6 @@ import (
 	"Golang/ReceitasGo/utils/misc"
 )
 
-func ExampleMySqlPass_Param() {
-
-	my := dao.SharedDbSession()
-	my.SetParam("parametros")
-	fmt.Println(my.Param())
-	// OutPut: parametros
-}
-
-func ExampleMySqlPass_Param2() {
-
-	my := dao.SharedDbSession()
-	my.SetParam("charset=utf8&parseTime=True&loc=Local")
-	fmt.Println(my.Param())
-	// OutPut: charset=utf8&parseTime=True&loc=Local
-}
-
-func ExampleMySqlPass_Dbname() {
-
-	my := dao.SharedDbSession()
-	fmt.Println(my.Dbname())
-	// OutPut: receitas
-}
-
-func ExampleMySqlPass_User() {
-
-	my := dao.SharedDbSession()
-	fmt.Println(my.User())
-	// OutPut: root
-}
-
-func ExampleMySqlPass_Pass() {
-
-	my := dao.SharedDbSession()
-	fmt.Println(my.Pass())
-	// OutPut: root
-}
 
 func ExampleMySqlPass_String() {
 
@@ -97,8 +61,7 @@ func TestMySqlPass_Db(t *testing.T) {
 
 	m.SetUser("root")
 
-	db, err := m.Db()
-	defer db.Close()
+	db, err := m.OpenDb()
 
 	if err == nil && db != nil {
 		t.Logf("%s %s", misc.TUDOCERTO, misc.CONECTADO)
@@ -114,14 +77,13 @@ func TestCreateTablesOnDb(t *testing.T) {
 	m := dao.SharedDbSession()
 
 	db, err := gorm.Open("mysql", m.String())
-	defer db.Close()
 
 	if err != nil {
 		t.Errorf("%s %s", misc.ERROCONECTANDO, err.Error())
 		return
 	}
 
-	if err := dao.CreateTablesOnDb(db); err != nil {
+	if err := m.CreateTablesOnDb(db); err != nil {
 		t.Errorf("%s %s", misc.NAOPUDECRIAR, err.Error())
 		return
 	}

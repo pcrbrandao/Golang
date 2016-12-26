@@ -4,13 +4,12 @@ import (
 	"fmt"
 	d "Golang/ReceitasGo/domain"
 	"Golang/ReceitasGo/utils/misc"
-	"github.com/jinzhu/gorm"
-	"log"
 	"sync"
 )
 
 type alimentoDAO struct {
-	db *gorm.DB
+	// não é necessário guardar isso
+	// db *gorm.DB
 }
 
 // O singleton para a struct
@@ -29,19 +28,23 @@ func SharedAlimentoDAO() *alimentoDAO {
 }
 
 func newAlimentoDAO() *alimentoDAO {
-	db, err := SharedDbSession().Db()
+	// db, err := SharedDbSession().OpenDb()
 
-	if err != nil {
-		log.Fatalf("Não pude iniciar o db: %s", err)
-		return nil
-	}
-	a := alimentoDAO{db: db}
+	// if err != nil {
+	//	log.Fatalf("Não pude iniciar o db: %s", err)
+	//	return nil
+	//}
+	//a := alimentoDAO{db: db}
+	a := alimentoDAO{}
 	return &a
 }
 
 func (ac *alimentoDAO)Add(al *d.Alimento) error {
 
-	tx := ac.db.Begin()
+	db, _ := SharedDbSession().OpenDb()
+	defer db.Close()
+
+	tx := db.Begin()
 
 	if !tx.NewRecord(al) {
 		return fmt.Errorf("%s", misc.JAEXISTE)
@@ -57,9 +60,11 @@ func (ac *alimentoDAO)Add(al *d.Alimento) error {
 }
 
 func (ac *alimentoDAO)Find(descricao string) d.Alimento {
+	db, _ := SharedDbSession().OpenDb()
+	defer db.Close()
 
 	var alimento d.Alimento
-	ac.db.Where(&d.Alimento{Descricao:descricao}).First(&alimento)
+	db.Where(&d.Alimento{Descricao:descricao}).First(&alimento)
 
 	return alimento
 }

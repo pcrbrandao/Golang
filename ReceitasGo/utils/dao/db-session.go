@@ -6,7 +6,6 @@ import (
 	"fmt"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"sync"
-	"net"
 	"Golang/ReceitasGo/domain"
 	"Golang/ReceitasGo/utils/interfaces"
 	"Golang/ReceitasGo/utils/misc"
@@ -29,11 +28,19 @@ type dbSession struct {
 
 	user string
 	pass string
-	address net.IP
+	address string
 	dbName string
 	param string
 
-	db *gorm.DB
+	// não preciso armazenar isso
+	// db *gorm.DB
+}
+
+func newDbSession() *dbSession {
+	d := dbSession{user:"root", pass:"root",
+		address:"127.0.0.1:8889", dbName:"receitas",
+		param:"charset=utf8&parseTime=True&loc=Local"}
+	return &d
 }
 
 // O singleton para a struct
@@ -44,17 +51,9 @@ var onceDbSession sync.Once
 func SharedDbSession() *dbSession {
 
 	onceDbSession.Do(func() {
-		sharedDbSession = &dbSession{}
+		sharedDbSession = newDbSession()
 	})
 	return sharedDbSession
-}
-
-// inicializa User se for nulo
-func (m *dbSession)User() string {
-	if m.user == "" {
-		return "root"
-	}
-	return m.user
 }
 
 // Valida a entrada de User
@@ -74,61 +73,25 @@ func (m *dbSession)SetUser(u string) error {
 	return nil
 }
 
-// inicializa Pass se for nulo
-func (m *dbSession)Pass() string {
-	if m.pass == "" {
-		return "root"
-	}
-	return m.pass
-}
-
-// o banco de dados padrão é o receitas
-func (m *dbSession)Dbname() string {
-	if m.dbName == "" {
-		return "receitas"
-	}
-	return m.dbName
-}
-
-// parâmetros default do GORM
-func (m *dbSession)Param() string {
-	if m.param == "" {
-		return "charset=utf8&parseTime=True&loc=Local"
-	}
-	return m.param
-}
-
 func (m *dbSession)SetParam(param string) {
 	m.param = param
 }
 
-// o endereço do servidor. Será a máquina local por padrão. Não aceitou localhost.
-func (m *dbSession)Address() string {
-	if m.address == nil {
-		return "127.0.0.1:8889"
-	}
-	return m.address.String()
-}
-
 // O Address é do tipo net.IP, por isso ele não precisa ser validado aqui.
-func (m *dbSession)SetAddress(ip net.IP) {
-	m.address = ip
+func (m *dbSession)SetAddress(address string) {
+	m.address = address
 }
 
 // Obtém a string no formato que o gorm.Open aceita.
 func (m *dbSession) String() string {
 
-	fields := []string{m.User(), ":", m.Pass(), "@tcp(", m.Address(), ")/", m.Dbname(), "?", m.Param()}
+	fields := []string{m.user, ":", m.pass, "@tcp(", m.address, ")/", m.dbName, "?", m.param}
 
 	return strings.Join(fields, "")
 }
 
 // retorna um db válido
-func (m *dbSession) Db() (*gorm.DB, error) {
-
-	if m.db != nil {
-		return m.db, nil
-	}
+func (m *dbSession) OpenDb() (*gorm.DB, error) {
 
 	db, err := gorm.Open("mysql", m.String())
 
@@ -137,7 +100,7 @@ func (m *dbSession) Db() (*gorm.DB, error) {
 		return nil, err
 	}
 
-	if err := CreateTablesOnDb(db); err != nil {
+	if err := m.CreateTablesOnDb(db); err != nil {
 		return nil, err
 	}
 
@@ -146,7 +109,7 @@ func (m *dbSession) Db() (*gorm.DB, error) {
 }
 
 // cria tabelas no db
-func CreateTablesOnDb(db *gorm.DB) error {
+func (m *dbSession) CreateTablesOnDb(db *gorm.DB) error {
 	db.SingularTable(true)
 
 	for _,model := range TABLES {
