@@ -1,10 +1,10 @@
-package tests
+package domain_test
 
 import (
 	"testing"
 	"Golang/ReceitasGo/domain"
-	"Golang/ReceitasGo/tests/utils"
 	"Golang/ReceitasGo/utils/misc"
+	"Golang/ReceitasGo/tests"
 )
 
 func TestEmailDeveSerValido(t *testing.T) {

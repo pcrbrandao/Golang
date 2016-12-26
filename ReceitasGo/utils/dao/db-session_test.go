@@ -1,4 +1,4 @@
-package tests
+package dao_test
 
 import (
 	"fmt"
@@ -6,6 +6,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"Golang/ReceitasGo/utils/dao"
 	"Golang/ReceitasGo/utils/misc"
+	"Golang/ReceitasGo/tests"
 )
 
 
@@ -23,10 +24,10 @@ func TestDoDeveSerInvalido(t *testing.T) {
 	entrada := "do"
 
 	if err := m.SetUser(entrada); err != nil {
-		PassouEntradaInvalida(entrada, t)
+		tests.PassouEntradaInvalida(entrada, t)
 		return
 	}
-	FalhouEntradaValida(entrada, t)
+	tests.FalhouEntradaValida(entrada, t)
 }
 
 func TestUserDeveSerValido(t *testing.T) {
@@ -35,10 +36,10 @@ func TestUserDeveSerValido(t *testing.T) {
 	entrada := "user"
 
 	if err := m.SetUser(entrada); err != nil {
-		FalhouEntradaInvalida(entrada, t)
+		tests.FalhouEntradaInvalida(entrada, t)
 		return
 	}
-	PassouEntradaValida(entrada, t)
+	tests.PassouEntradaValida(entrada, t)
 }
 
 func TestRoot12DeveSerValido(t *testing.T) {
@@ -48,11 +49,11 @@ func TestRoot12DeveSerValido(t *testing.T) {
 	entrada := "root12"
 
 	if err := m.SetUser(entrada); err != nil {
-		FalhouEntradaInvalida(entrada, t)
+		tests.FalhouEntradaInvalida(entrada, t)
 		return
 	}
 
-	PassouEntradaValida(entrada, t)
+	tests.PassouEntradaValida(entrada, t)
 }
 
 func TestMySqlPass_Db(t *testing.T) {

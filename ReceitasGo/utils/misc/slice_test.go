@@ -1,9 +1,10 @@
-package tests
+package misc_test
 
 import (
 	"testing"
 	"fmt"
 	"Golang/ReceitasGo/utils/misc"
+	"Golang/ReceitasGo/tests"
 )
 
 func TestRemoveDaSlice(t *testing.T) {
@@ -25,7 +26,7 @@ func TestRemoveDaSlice(t *testing.T) {
 		}
 	}
 
-	PassouEntradaValida("entrada", t)
+	tests.PassouEntradaValida("entrada", t)
 }
 
 func TestSlicesDevemSerIguais(t *testing.T) {

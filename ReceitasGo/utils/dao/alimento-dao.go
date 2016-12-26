@@ -7,9 +7,10 @@ import (
 	"sync"
 )
 
+// A struct é privada. Uma instância deve ser obtida por SharedAlimentoDAO
+// para evitar que haja mais de uma instância no aplicativo.
+// Todo método que utiliza o db deve abrí-lo e fechá-lo em seguida.
 type alimentoDAO struct {
-	// não é necessário guardar isso
-	// db *gorm.DB
 }
 
 // O singleton para a struct
@@ -22,23 +23,12 @@ var onceAlimentoDAO sync.Once
 func SharedAlimentoDAO() *alimentoDAO {
 
 	onceAlimentoDAO.Do(func() {
-		sharedAlimentoDAO = newAlimentoDAO()
+		sharedAlimentoDAO = &alimentoDAO{}
 	})
 	return sharedAlimentoDAO
 }
 
-func newAlimentoDAO() *alimentoDAO {
-	// db, err := SharedDbSession().OpenDb()
-
-	// if err != nil {
-	//	log.Fatalf("Não pude iniciar o db: %s", err)
-	//	return nil
-	//}
-	//a := alimentoDAO{db: db}
-	a := alimentoDAO{}
-	return &a
-}
-
+// Adiciona um alimento ao db com uma transação.
 func (ac *alimentoDAO)Add(al *d.Alimento) error {
 
 	db, _ := SharedDbSession().OpenDb()
@@ -59,6 +49,7 @@ func (ac *alimentoDAO)Add(al *d.Alimento) error {
 	return nil
 }
 
+// Encontra um alimento pela descrição e o retorna.
 func (ac *alimentoDAO)Find(descricao string) d.Alimento {
 	db, _ := SharedDbSession().OpenDb()
 	defer db.Close()

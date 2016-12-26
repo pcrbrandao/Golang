@@ -1,10 +1,10 @@
-package tests
+package domain_test
 
 import (
 	"testing"
 	"fmt"
-	"Golang/ReceitasGo/tests/utils"
 	"Golang/ReceitasGo/domain"
+	"Golang/ReceitasGo/tests"
 )
 
 func getUsuario() domain.Usuario {
