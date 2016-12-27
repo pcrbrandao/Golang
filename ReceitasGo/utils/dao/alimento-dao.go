@@ -31,8 +31,12 @@ func SharedAlimentoDAO() *alimentoDAO {
 // Adiciona um alimento ao db com uma transação.
 func (ac *alimentoDAO)Add(al *d.Alimento) error {
 
-	db, _ := SharedDbSession().OpenDb()
+	db, db_err := SharedDbSession().OpenDb()
 	defer db.Close()
+
+	if db_err != nil {
+		return db_err
+	}
 
 	tx := db.Begin()
 
@@ -50,14 +54,40 @@ func (ac *alimentoDAO)Add(al *d.Alimento) error {
 }
 
 // Encontra um alimento pela descrição e o retorna.
-func (ac *alimentoDAO)Find(descricao string) d.Alimento {
-	db, _ := SharedDbSession().OpenDb()
+func (ac *alimentoDAO)Find(descricao string) (*d.Alimento, error) {
+	db, db_err := SharedDbSession().OpenDb()
 	defer db.Close()
+
+	if db_err != nil {
+		return nil, db_err
+	}
 
 	var alimento d.Alimento
 	db.Where(&d.Alimento{Descricao:descricao}).First(&alimento)
 
-	return alimento
+	return &alimento, nil
+}
+
+// Apaga um alimento. Para evitar uma consulta duplicada o método
+// não ferifica se o registro existe antes de deletar.
+// O registro não é apagado no banco, mas sim marcado como deletado.
+// Um novo método deve apagar os registros marcados definitivamente.
+func (ac *alimentoDAO)Delete(al *d.Alimento) error {
+	db, err := SharedDbSession().OpenDb()
+	defer db.Close()
+
+	if err != nil {
+		return err
+	}
+
+	// Unscoped deleta o registro definitivamente.
+	// err = db.Unscoped().Delete(al).Error
+	err = db.Delete(al).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (ac *alimentoDAO)List(al *d.Alimento) error {
@@ -66,11 +96,6 @@ func (ac *alimentoDAO)List(al *d.Alimento) error {
 }
 
 func (ac *alimentoDAO)Edit(al *d.Alimento) error {
-
-	return fmt.Errorf("%s", misc.EMDESENVOLVIMENTO)
-}
-
-func (ac *alimentoDAO)Delete(al *d.Alimento) error {
 
 	return fmt.Errorf("%s", misc.EMDESENVOLVIMENTO)
 }

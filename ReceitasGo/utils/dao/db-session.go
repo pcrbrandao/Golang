@@ -104,13 +104,14 @@ func (m *dbSession) OpenDb() (*gorm.DB, error) {
 		return nil, err
 	}
 
-	println(misc.CONECTADO)
+	fmt.Printf("%s\n", misc.CONECTADO)
 	return db, nil
 }
 
-// cria tabelas no db
+// cria tabelas no db com o nome acrescido do 's' no final
+// as nomes incorretos devem estar configurados na struc em domain
 func (m *dbSession) CreateTablesOnDb(db *gorm.DB) error {
-	db.SingularTable(true)
+	db.SingularTable(false)
 
 	for _,model := range TABLES {
 		if err := db.AutoMigrate(model).Error; err != nil {

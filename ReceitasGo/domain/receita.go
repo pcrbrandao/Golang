@@ -14,6 +14,12 @@ type Receita struct {
 	IngredienteNaReceita []IngredienteNaReceita
 }
 
+// ver alimento
 func (a *Receita)GetID() uint {
 	return a.ID
+}
+
+// configura nome da tabela
+func (Receita) TableName() string {
+	return "receitas"
 }

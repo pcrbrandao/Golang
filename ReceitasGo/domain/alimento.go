@@ -14,6 +14,9 @@ type Alimento struct {
 	Ingrediente []Ingrediente
 }
 
+// implementa interface ider
+// utilizado na criação automática das tabelas
 func (a *Alimento)GetID() uint {
 	return a.ID
 }
+

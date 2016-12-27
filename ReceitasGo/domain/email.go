@@ -27,7 +27,7 @@ func (e *Email) SetAddress(address string) error {
 
 	return fmt.Errorf("%q %s", address, misc.NAOEVALIDO)
 }
-
+// ver alimento
 func (a *Email)GetID() uint {
 	return a.ID
 }

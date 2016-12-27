@@ -11,6 +11,12 @@ type Ocasiao struct {
 	Receitas []Receita
 }
 
+// ver alimento
 func (a *Ocasiao)GetID() uint {
 	return a.ID
+}
+
+// nome da tabela no banco
+func (Ocasiao) TableName() string {
+	return "ocasioes"
 }
