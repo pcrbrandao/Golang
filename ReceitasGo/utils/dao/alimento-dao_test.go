@@ -12,7 +12,7 @@ import (
 // Tenta adicionar. Passa se não retornar erro.
 func TestAlimentoDAO_Add(t *testing.T) {
 
-	alimento := domain.Alimento{Descricao: "Alimento 2", GrupoAlimentar:0}
+	alimento := domain.Alimento{Descricao: "Alimento 1", GrupoAlimentar:0}
 
 	a_dao := dao.SharedAlimentoDAO()
 
@@ -58,7 +58,7 @@ func TestAlimentoDAO_Find2(t *testing.T) {
 
 // Deleta um registro 'Alimento 1' existente no banco. Deve retornar erro == nil
 func TestAlimentoDAO_Delete(t *testing.T) {
-	entrada := domain.Alimento{Descricao:"Alimento 4", GrupoAlimentar:0}
+	entrada := domain.Alimento{Descricao:"Alimento 1", GrupoAlimentar:0}
 	a_dao := dao.SharedAlimentoDAO()
 	err := a_dao.Add(&entrada)
 
@@ -68,7 +68,7 @@ func TestAlimentoDAO_Delete(t *testing.T) {
 		tests.FalhouEntradaInvalida(entrada.Descricao,t)
 		return
 	}
-	fmt.Printf("Registro acrescentado e encontrado: %q", alimento)
+	fmt.Printf("Registro acrescentado e encontrado: %q\n", alimento)
 
 	err = a_dao.Delete(alimento)
 	if err != nil {
@@ -77,4 +77,22 @@ func TestAlimentoDAO_Delete(t *testing.T) {
 	}
 
 	tests.PassouEntradaValida(entrada.Descricao, t)
+}
+
+// Retorna os campos marcados como deletados, considerando que existam no banco.
+func TestAlimentoDAO_FindDeleted(t *testing.T) {
+	a_dao := dao.SharedAlimentoDAO()
+
+	deletados, err := a_dao.FindDeleted()
+
+	if err != nil {
+		t.Errorf("Erro tentando encontrar deletados: %q", err.Error())
+		return
+	}
+
+	fmt.Printf("Itens encontrados\n")
+	for _, v := range deletados {
+		fmt.Printf("id: %d, deletado em: %q\n", v.ID, v.DeletedAt)
+	}
+	t.Logf("%s", misc.TUDOCERTO)
 }

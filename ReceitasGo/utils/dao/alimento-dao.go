@@ -53,7 +53,7 @@ func (ac *alimentoDAO)Add(al *d.Alimento) error {
 	return nil
 }
 
-// Encontra um alimento pela descrição e o retorna.
+// Encontra um alimento pela descrição e o retorna se deleted_at é NULL.
 func (ac *alimentoDAO)Find(descricao string) (*d.Alimento, error) {
 	db, db_err := SharedDbSession().OpenDb()
 	defer db.Close()
@@ -88,6 +88,23 @@ func (ac *alimentoDAO)Delete(al *d.Alimento) error {
 	}
 
 	return nil
+}
+
+// Retorna os registros onde deleted_at não é nulo.
+func (ac *alimentoDAO)FindDeleted() ([]d.Alimento, error) {
+	db, err := SharedDbSession().OpenDb()
+	defer db.Close()
+
+	if err != nil {
+		return nil, err
+	}
+
+	var deletados []d.Alimento
+
+	if err := db.Unscoped().Where("deleted_at <> ?", "NULL").Find(&deletados).Error; err != nil {
+		return nil, err
+	}
+	return deletados, nil
 }
 
 func (ac *alimentoDAO)List(al *d.Alimento) error {
