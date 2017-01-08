@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"io/ioutil"
 )
 
 func sayhelloName(w http.ResponseWriter, r *http.Request) {
@@ -20,7 +21,6 @@ func sayhelloName(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("val: ", strings.Join(v, ", "))
 	}
 	fmt.Fprintf(w, "Olá você!") // escreve dados para response
-
 }
 
 func login (w http.ResponseWriter, r *http.Request) {
@@ -36,8 +36,31 @@ func login (w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+type Page struct {
+	Title string
+	Body  []byte
+}
+
+func loadPage(title string) (*Page, error) {
+	filename := title + ".html"
+	body, err := ioutil.ReadFile(filename)
+	if err != nil {
+		return nil, err
+	}
+	return &Page{Title: title, Body: body}, nil
+}
+
+func indexHandler(w http.ResponseWriter, r *http.Request) {
+	p, err := loadPage("index")
+	if err != nil {
+		p = &Page{Title:"Erro tentando ler index.html"}
+	}
+	t, _ := template.ParseFiles("index.html")
+	t.Execute(w, p)
+}
+
 func main() {
-	http.HandleFunc("/", sayhelloName) // o método sayhelloName será executado na raíz '/'
+	http.HandleFunc("/", indexHandler) // o método sayhelloName será executado na raíz '/'
 	http.HandleFunc("/login", login)   // e o método login em '/login'
 
 	err := http.ListenAndServe(":9090", nil) // servidor funcionando em localhost:9090
