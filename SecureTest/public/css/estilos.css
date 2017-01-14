@@ -1,0 +1,19 @@
+h1 {
+	font-family: serif;
+	background-image:url(../img/sobre-background.jpg)
+}
+
+h2 {
+	font-family: sans-serif;
+}
+
+p {
+	text-align: justify;
+}
+
+body {
+	font-family: "Arial", "Helvetica", sans-serif;
+	border-color: gray;
+	border-style: solid;
+	border-with: 1xp;
+}

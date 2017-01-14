@@ -1,0 +1,39 @@
+@charset "UTF-8";
+/* CSS Document */
+body {
+	color: #333333;
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+
+h1 {
+	background-image:url(../img/sobre-background.jpg);
+}
+
+h2 {
+	border-bottom: 2px solid #333333;
+}
+
+figure {
+	background-color: #F2EDED;
+	border: 1px solid #ccc;
+	text-align: center;
+}
+
+figcaption {
+	font-style: italic;
+}
+
+p {
+	margin: auto;
+}
+
+#cabecalho {
+	color: white;
+	text-align: center;
+}
+
+#rodape img {
+	margin-right: 35px;
+	vertical-align: midle;
+	width: 94px;
+}
