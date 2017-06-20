@@ -1,8 +1,7 @@
 <component name="libraryTable">
-  <library name="GOPATH &lt;ReceitasGo&gt;">
+  <library name="GOPATH &lt;SecureTest&gt;">
     <CLASSES>
       <root url="file://$PROJECT_DIR$/../../github.com" />
-      <root url="file://$PROJECT_DIR$/../../webAppHeroku" />
       <root url="file://$PROJECT_DIR$/.." />
       <root url="file://$PROJECT_DIR$/../../gopkg.in" />
       <root url="file://$PROJECT_DIR$/../../golang.org" />
@@ -11,7 +10,6 @@
     <JAVADOC />
     <SOURCES>
       <root url="file://$PROJECT_DIR$/../../github.com" />
-      <root url="file://$PROJECT_DIR$/../../webAppHeroku" />
       <root url="file://$PROJECT_DIR$/.." />
       <root url="file://$PROJECT_DIR$/../../gopkg.in" />
       <root url="file://$PROJECT_DIR$/../../golang.org" />

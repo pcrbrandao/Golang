@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/GoWebApp.iml" filepath="$PROJECT_DIR$/GoWebApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SecureTest.iml" filepath="$PROJECT_DIR$/SecureTest.iml" />
     </modules>
   </component>
 </project>
