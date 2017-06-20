@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="GOPATH &lt;ReceitasGo&gt;">
+  <library name="GOPATH &lt;GoWebApp&gt;">
     <CLASSES>
       <root url="file://$PROJECT_DIR$/../../github.com" />
       <root url="file://$PROJECT_DIR$/../../webAppHeroku" />
@@ -17,8 +17,5 @@
       <root url="file://$PROJECT_DIR$/../../golang.org" />
       <root url="file://$PROJECT_DIR$/../../sourcegraph.com" />
     </SOURCES>
-    <excluded>
-      <root url="file://$PROJECT_DIR$" />
-    </excluded>
   </library>
 </component>
